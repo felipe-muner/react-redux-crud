@@ -19,16 +19,22 @@ export const userSlice = createSlice({
   name: "user",
   initialState,
   reducers: {
-    add: (state, action: PayloadAction<userState>) => {
-      state.users.push(action.payload);
+    add: (state, action: any) => {
+      state.users.push({
+        id: state.users.length + 1,
+        ...action.payload,
+      });
     },
     update: (state, action: PayloadAction<userState>) => {
-      const user = state.users.find((u) => u.id === action.payload.id);
-      console.log(user);
+      let user = state.users.find((u) => u.id === action.payload.id);
+      if (user) {
+        user.name = action.payload.name + " Edited";
+        user.salary = Math.random();
+      }
     },
     // Use the PayloadAction type to declare the contents of `action.payload`
     _delete: (state, action: PayloadAction<number>) => {
-      state.users.filter((u) => u.id !== action.payload);
+      state.users = state.users.filter((u) => u.id !== action.payload);
     },
   },
 });
@@ -38,6 +44,6 @@ export const { add, update, _delete } = userSlice.actions;
 // The function below is called a selector and allows us to select a value from
 // the state. Selectors can also be defined inline where they're used instead of
 // in the slice file. For example: `useSelector((state: RootState) => state.counter.value)`
-export const selectUser = (state: RootState) => state.user.users
+export const selectUser = (state: RootState) => state.user.users;
 
 export default userSlice.reducer;
