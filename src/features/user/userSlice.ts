@@ -1,6 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { RootState } from "../../app/store";
-
+import { RootState, AppThunk } from "../../app/store";
 export interface userState {
   id: number;
   name: string;
@@ -8,11 +7,12 @@ export interface userState {
   gender: "M" | "F" | "D";
 }
 
-const initialState: { users: userState[] } = {
+const initialState: { users: userState[]; test: number[] } = {
   users: [
     { id: 1, name: "felipe muner", salary: 1000, gender: "M" },
     { id: 2, name: "luiza muner", salary: 500, gender: "F" },
   ],
+  test: [],
 };
 
 export const userSlice = createSlice({
@@ -24,6 +24,9 @@ export const userSlice = createSlice({
         id: state.users.length + 1,
         ...action.payload,
       });
+    },
+    initUsers: (state, action: PayloadAction<number[]>) => {
+      state.test = action.payload;
     },
     update: (state, action: PayloadAction<userState>) => {
       let user = state.users.find((u) => u.id === action.payload.id);
@@ -39,11 +42,21 @@ export const userSlice = createSlice({
   },
 });
 
-export const { add, update, _delete } = userSlice.actions;
+export const { add, update, _delete, initUsers } = userSlice.actions;
 
 // The function below is called a selector and allows us to select a value from
 // the state. Selectors can also be defined inline where they're used instead of
 // in the slice file. For example: `useSelector((state: RootState) => state.counter.value)`
-export const selectUser = (state: RootState) => state.user.users;
+export const selectUser = (state: RootState) => state.user;
+
+export const getUsers = (): AppThunk => async (dispatch, getState) => {
+  // const currentValue = selectCount(getState());
+  const usersApi = await (
+    await fetch("https://jsonplaceholder.typicode.com/users")
+  ).json();
+  console.log(usersApi);
+  const users: number[] = [1, 2, 3, 4];
+  dispatch(initUsers(users));
+};
 
 export default userSlice.reducer;
