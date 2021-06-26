@@ -7,12 +7,12 @@ export interface userState {
   gender: "M" | "F" | "D";
 }
 
-const initialState: { users: userState[]; test: number[] } = {
+const initialState: { users: userState[]; usersApi: userState[] } = {
   users: [
     { id: 1, name: "felipe muner", salary: 1000, gender: "M" },
     { id: 2, name: "luiza muner", salary: 500, gender: "F" },
   ],
-  test: [],
+  usersApi: [],
 };
 
 export const userSlice = createSlice({
@@ -25,8 +25,8 @@ export const userSlice = createSlice({
         ...action.payload,
       });
     },
-    initUsers: (state, action: PayloadAction<number[]>) => {
-      state.test = action.payload;
+    initUsers: (state, action: PayloadAction<userState[]>) => {
+      state.usersApi = action.payload;
     },
     update: (state, action: PayloadAction<userState>) => {
       let user = state.users.find((u) => u.id === action.payload.id);
@@ -55,8 +55,7 @@ export const getUsers = (): AppThunk => async (dispatch, getState) => {
     await fetch("https://jsonplaceholder.typicode.com/users")
   ).json();
   console.log(usersApi);
-  const users: number[] = [1, 2, 3, 4];
-  dispatch(initUsers(users));
+  dispatch(initUsers(usersApi));
 };
 
 export default userSlice.reducer;

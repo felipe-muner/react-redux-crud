@@ -10,8 +10,8 @@ import {
 
 export function User() {
   const { users } = useAppSelector(selectUser);
-  const { test } = useAppSelector(selectUser);
-  
+  const { usersApi } = useAppSelector(selectUser);
+
   const dispatch = useAppDispatch();
 
   const handleAdd = () => {
@@ -43,14 +43,16 @@ export function User() {
       <div>
         <h5>add new user</h5>
         <button onClick={() => handleAdd()}>Add User</button>
-        <h5>thunk example</h5>
-        <button onClick={() => asyncThunkExample()}>async get data</button>
       </div>
       <div>
         <ul>{list}</ul>
       </div>
-      after click over async get data
-      {test}
+      <div>
+        <h5>thunk example</h5>
+        <button onClick={() => asyncThunkExample()}>async get data</button>
+        <h3>after click over async get data</h3>
+        {JSON.stringify(usersApi)}
+      </div>
     </div>
   );
 }
